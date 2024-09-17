@@ -1,0 +1,91 @@
+﻿@* 
+@layout StudentLayout
+@page "/"
+
+
+@if (false)
+{
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>Check Your Email for Confirmation Code</h3>
+        </div>
+        <div class="mb-3">
+            <label>Code</label>
+            <input @bind="inputCode" class="form-control" placeholder="Code" />
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="SubmitCode" class="btn btn-primary">Confirm</button>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>Join Queue for Office Hours for @Advisor?.FirstName @Advisor?.LastName</h3>
+            <p>
+                If you are a student, you must use your @@ttu.edu address.
+            </p>
+            <div class="mb-3">
+                <label>First Name</label>
+                <input @bind="FirstName" class="form-control" placeholder="First Name" />
+            </div>
+            <div class="mb-3">
+                <label>Last Name</label>
+                <input @bind="LastName" class="form-control" placeholder="Last Name" />
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <input @bind="Email" class="form-control" placeholder="Email" />
+            </div>
+            @if (string.IsNullOrWhiteSpace(FirstName))
+            {
+                <p><span style="color: red;">First Name cannot be empty.</span></p>
+            }
+            @if (string.IsNullOrWhiteSpace(LastName))
+            {
+                <p><span style="color: red">Last Name cannot be empty.</span></p>
+            }
+            @if (string.IsNullOrWhiteSpace(Email))
+            {
+                <p><span style="color: red">Email cannot be empty.</span></p>
+            }
+            <div class="mb-3 d-grid gap-2">
+                <button @onclick="HandleJoin" class="btn btn-primary">Join Queue</button>
+            </div>
+        </div>
+
+    </div>
+    if (true)
+    {
+        <p><span style="color: red">The code is incorrect.</span></p>
+    }
+    if (true)
+    {
+        <p><span style="color: red">Email cannot be empty.</span></p>
+    }
+}
+
+@code {
+    private Advisor Advisor
+    {
+        get
+        {
+            return new Advisor()
+            {
+                FirstName = "Andrew",
+                LastName = "Vanderpool"
+            };
+        }
+    }
+
+    private inputCode =
+
+    private void HandleJoin()
+    {
+        
+    }
+
+}
+ *@

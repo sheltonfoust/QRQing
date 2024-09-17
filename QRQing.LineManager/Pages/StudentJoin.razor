@@ -1,0 +1,131 @@
+﻿@layout StudentLayout
+@page "/studentjoin/{advisorId:int}"
+@using QRQing.LineManager.Authentication;
+@inject IDbContextFactory<LineManagerDbContext> ContextFactory
+@inject IJSRuntime js
+@inject NavigationManager navManager
+@inject AuthenticationStateProvider authStateProvider
+@inject IEmailSender emailSender
+
+
+<style>
+    p {
+        text-align: center;
+    }
+
+    h {
+        text-align: center;
+    }
+</style>
+
+@if (enterEmailStep)
+{
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>Join Queue for Office Hours for @Advisor?.FirstName @Advisor?.LastName</h3>
+            <p>
+                If you are a student, you must use your @@ttu.edu address.
+            </p>
+        </div>
+            <div class="mb-3">
+                <label style="text-align: left">First Name</label>
+                <input @bind="FirstName" class="form-control" placeholder="First Name" />
+                @if (string.IsNullOrWhiteSpace(FirstName))
+                {
+                    @if (modifiedFirstName)
+                    {
+                        <p><span style="color: red;">First name cannot be empty.</span></p>
+                    }
+                }
+                else
+                {
+                    modifiedFirstName = true;
+                }
+            </div>
+            <div class="mb-3">
+                <label style="text-align: left">Last Name</label>
+                <input @bind="LastName" class="form-control" placeholder="Last Name" />
+                @if (string.IsNullOrWhiteSpace(LastName))
+                {
+                    @if (modifiedLastName)
+                    {
+                        <p><span style="color: red">Last name cannot be empty.</span></p>
+                    }
+                }
+                else
+                {
+                    modifiedLastName = true;
+                }
+            </div>
+            <div class="mb-3">
+                <label style="text-align: left">Email</label>
+                <input @bind="Email" class="form-control" placeholder="Email" />
+                @if (string.IsNullOrWhiteSpace(Email))
+                {
+                    @if (modifiedEmail)
+                    {
+                        <p><span style="color: red">Email cannot be empty.</span></p>
+                    }
+                }
+                else
+                {
+                    modifiedEmail = true;
+                    <p></p>
+                }
+                <div class="mb-3 d-grid gap-2">
+                    <button @onclick="SubmitInfo" class="btn btn-primary">Join Queue</button>
+                </div>
+                <p>
+                 @if (PreExistingStudent != null)
+                {
+                        <span style="color: red">
+                            You are already in line for 
+                            @PreExistingStudent.Advisor?.FirstName @(PreExistingStudent.Advisor?.LastName). <br>
+                            If you login you can leave the queue.
+
+                        </span>
+                }
+                </p>
+                <div class="mb-3 d-grid gap-2">
+                    <p>
+                        or
+                    </p>
+                </div>
+                <div class="mb-3 d-grid gap-2">
+                    <button @onclick="GoToLogin" class="btn btn-primary">Login</button>
+                </div>
+                
+            </div>
+
+    </div>
+    
+}
+else
+{
+	<div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+		<div class="mb-3 text-center">
+			<h3>Check Your Email for the Confirmation Code</h3>
+        </div>
+		    <div class="mb-3">
+			    <label style="text-align: left">Code</label>
+			    <input @bind="inputCode" class="form-control" placeholder="Code" />
+		    </div>
+		    @if (codeIncorrect)
+		    {
+			    <p><span style="color: red">The code is incorrect.</span></p>
+		    }
+		    @if (timeElapsed)
+		    {
+			    <p><span style="color: red">The code must be submitted within @minCodeWindow minutes.</span></p>
+		    }
+           
+            <div class="mb-3 d-grid gap-2">
+			    <button @onclick="SubmitCode" class="btn btn-primary">Confirm</button>
+		    </div>
+
+
+		
+	</div>
+    
+
+}

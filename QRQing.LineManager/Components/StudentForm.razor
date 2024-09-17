@@ -1,0 +1,80 @@
+﻿@if (Student is not null)
+{
+    <EditForm Model="@Student" OnValidSubmit="@HandleValidSubmit"
+          OnInvalidSubmit="@HandleInvalidSubmit">
+        
+        @if(string.IsNullOrEmpty(Student.FirstName))
+        {
+            <p><span style="color: red;">First Name cannot be empty.</span></p>
+        }
+        @if(string.IsNullOrEmpty(Student.LastName))
+        {
+            <p><span style="color: red">Last Name cannot be empty.</span></p>
+        }
+        @if(string.IsNullOrEmpty(Student.Email))
+        {
+            <p><span style="color: red">Email cannot be empty.</span></p>
+        }
+
+        @if(Student.QueuePosition <= 0)
+        {
+            <p><span style="color: red;">Queue Position must be positive.</span></p>
+        }
+
+
+        <div class="mb-3">
+            <label for="firstname" class="form-label">First Name</label>
+            <InputText id="firstname" class="form-control"
+                   @bind-Value="Student.FirstName" />
+            @*<ValidationMessage For="() => Student.FirstName"/>*@
+        </div>
+
+        <div class="mb-3">
+            <label for="lastname" class="form-label">Last Name</label>
+            <InputText id="lastname" class="form-control"
+                   @bind-Value="Student.LastName" />
+            @*<ValidationMessage For="() => Student.LastName"/>*@
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText id="email" class="form-control"
+                @bind-Value="Student.Email" />
+            @*<ValidationMessage For="() => Student.Email"/>*@
+        </div>
+
+        <div class="mb-3">
+            <label for="advisor" class="form-label">Advisor</label>
+            <InputSelect id="advisor" class="form-select"
+                     @bind-Value="Student.AdvisorId">
+                @if (Advisors is not null)
+                {
+                    @foreach (var advisor in Advisors)
+                    {
+                        <option value="@advisor.Id">@advisor.FirstName</option>
+                    }
+                }
+            </InputSelect>
+        </div>
+
+        
+        <div class="mb-3" >
+            <label for="advisor" class="form-label">Queue Position</label>
+            <InputNumber id="queueposition" class="form-control"
+                    @bind-Value="Student.QueuePosition" />
+            @*<ValidationMessage For="() => Student.QueuePosition"/>*@
+
+        </div>
+
+        @if(IsEdit)
+        {
+            <button type="submit" class="btn btn-primary" disabled="@IsBusy">Update</button>
+            <button type="button" class="btn btn-secondary"
+              @onclick="HandleCancel" disabled="@IsBusy">Cancel</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary" disabled="@IsBusy">Add</button>
+        }
+    </EditForm>
+}

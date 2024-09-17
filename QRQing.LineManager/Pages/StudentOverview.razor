@@ -1,0 +1,77 @@
+﻿@page "/students/list/{currentPage:int?}"
+@using QRQing.LineManager.Authentication;
+@inject IDbContextFactory<LineManagerDbContext> ContextFactory
+@inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Advisor")]
+@inject IEmailSender emailSender
+
+
+<PageTitle>Line Manager</PageTitle>
+
+<h1>Line for @Advisor?.FirstName @Advisor?.LastName</h1>
+
+@if (Students is null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <ul class="pagination mt-3">
+        <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+            <a class="page-link" href="/students/list/@(CurrentPage - 1)">Previous</a>
+        </li>
+        @for (int i = 1; i <= TotalPages; i++)
+        {
+            <li class="page-item @(CurrentPage == i ? "active" : "")">
+                <a class="page-link" href="/students/list/@i">@i</a>
+            </li>
+        }
+        <li class="page-item @(CurrentPage == TotalPages ? "disabled" : "")">
+            <a class="page-link" href="/students/list/@(CurrentPage + 1)">Next</a>
+        </li>
+    </ul>
+
+    <button class="btn btn-outline-danger"
+    @onclick="() => HandleDelete(Advisor?.Students.FirstOrDefault())">
+        Remove First Student
+    </button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Time Joined</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Students)
+            {
+                <tr>
+                    <td>@student.QueuePosition</td>
+                    <td>@student.TimeJoined</td>
+                    <td>@student.FirstName</td>
+                    <td>@student.LastName</td>
+                    <td>@student.Email</td>
+                    <td class="btn-group-sm">
+                        <a href="/students/edit/@student.Id"
+                           class="btn btn-outline-primary">
+                           Edit
+                        </a>
+                        <button class="btn btn-outline-danger"
+                           @onclick="() => HandleDelete(student)">
+                           Remove
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

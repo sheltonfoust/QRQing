@@ -1,0 +1,80 @@
+﻿@page "/studentlogin"
+@inherits Login;
+@layout StudentLayout
+@using QRQing.LineManager.Authentication;
+@using QRQing.LineManager.Components;
+@inject IDbContextFactory<LineManagerDbContext> ContextFactory
+@inject IJSRuntime js
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@inject IEmailSender emailSender
+
+<style>
+    p {text-align: center;}
+    h {text-align: center;}
+</style>
+
+
+@if (enterEmailStep)
+{
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>@FormTitle</h3>
+            <p>Login here if you are already in a queue.</p>
+
+        </div>
+        <div class="mb-3">
+            <label>Email</label>
+            <input @bind="Email" class="form-control" placeholder="Email" />
+            @if (string.IsNullOrWhiteSpace(Email))
+            {
+                @if (modifiedEmail)
+                {
+                    <p><span style="color: red">Email cannot be empty</span></p>
+                }
+            }
+            else
+            {
+                modifiedEmail = true;
+            }
+        </div>
+        <div class="mb-3 d-grid gap-1">
+            <button @onclick="EnterEmail" class="btn btn-primary">Login</button>
+
+            <p>
+                @if (notInLineWarning)
+                {
+                    <span style="color: red">You are currently not in line. Please add yourself to a queue instead.</span>
+                }
+            </p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>Check Your Email for the Confirmation Code</h3>
+        </div>
+        <div class="mb-3">
+            <label style="text-align: left">Code</label>
+            <input @bind="inputCode" class="form-control" placeholder="Code" />
+        </div>
+        @if (codeIncorrect)
+        {
+            <p><span style="color: red">The code is incorrect.</span></p>
+        }
+        @if (timeElapsed)
+        {
+            <p><span style="color: red">The code must be submitted within @minCodeWindow minutes.</span></p>
+        }
+
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="SubmitCode" class="btn btn-primary">Confirm</button>
+        </div>
+
+
+
+    </div>
+}
+

@@ -1,0 +1,31 @@
+﻿@page "/students/edit/{studentId:int}"
+@attribute [Authorize(Roles = "Advisor")]
+@inject IDbContextFactory<LineManagerDbContext> ContextFactory
+@inject NavigationManager NavigationManager
+@inject StateContainer StateContainer
+@inject NavigationManager Navigation
+
+<PageTitle>Edit Student</PageTitle>
+
+<h1>Edit Student</h1>
+
+@if (StudentToEdit is null && !IsBusy)
+{
+    <div class="alert alert-danger">Student with Id @StudentId was not found.</div>
+}
+else
+{
+    <StudentForm Student="@StudentToEdit"
+              Advisors="@Advisors"
+              IsEdit="true"
+              IsBusy="@IsBusy" 
+              OnSubmit="@HandleSubmit"
+              OnCancel="NavigateToOverviewPage"/>
+}
+
+@if (ErrorMessage is not null)
+{
+    <br/>
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+

@@ -1,0 +1,25 @@
+﻿@layout StudentLayout
+@page "/studentview"
+@inject IDbContextFactory<LineManagerDbContext> ContextFactory
+@inject IJSRuntime JS
+@attribute [Authorize(Roles = "Student")]
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider authStateProvider
+
+
+<div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+    <div class="mb-3 text-center">
+        <h3>Hello, @_Student?.FirstName @_Student?.LastName</h3>
+    </div>
+    <div class="mb-3 text-center">
+        <p>
+            Waiting for @_Student?.Advisor?.FirstName @_Student?.Advisor?.LastName <br />
+            Place in Line: @_Student?.QueuePosition
+            
+        </p>
+    </div>
+    <div class="mb-3 d-grid gap-2">
+        <buttton @onclick="LeaveQueue" class="btn btn-primary">Leave Queue</buttton>
+    </div>
+
+</div>
